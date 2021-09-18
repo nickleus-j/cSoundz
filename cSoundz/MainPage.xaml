@@ -11,10 +11,7 @@
 
     <Grid>
         <StackPanel>
-            <TextBlock Text="Yo!"/>
             <visualizer:DiscreteVUBar x:Name="vuMeter"/>
-            <!--<visualizer:CustomVisualizer />-->
-            
         </StackPanel>
         <local:MediaPlayerPage></local:MediaPlayerPage>
     </Grid>
