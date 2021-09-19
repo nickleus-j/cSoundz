@@ -85,6 +85,8 @@
                 <AppBarButton Click="PlayButton_Click" Icon="Play" FocusVisualSecondaryBrush="#9988CBB9"/>
                 <AppBarButton Click="StopButton_Click" Icon="Pause" FocusVisualSecondaryBrush="#999FA8DE" />
                 <AppBarButton Click="OpenFile_Click" Icon="OpenFile" FocusVisualSecondaryBrush="#99B0E652" />
+                <Slider ValueChanged="volumeSlide_ValueChanged" MinWidth="100" Value="100" x:Name="volumeSlide" Maximum="100" Minimum="0"/>
+                <TextBlock x:Name="VolumeLbl" Text="100"/>
             </StackPanel>
         </Grid>
     </Grid>

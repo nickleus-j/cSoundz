@@ -75,8 +75,8 @@ namespace cSoundz
             const int fromDb = -86;
             const int toDb = 6;
             MeterBarLevel[] levels = new MeterBarLevel[toDb - fromDb];
-            Color fromColor = Colors.Yellow;
-            Color toColor = Colors.Red;
+            Color fromColor = Colors.LightGoldenrodYellow;
+            Color toColor = Colors.Crimson;
             float redStep = (float)toColor.R - (float)fromColor.R;
             float greenStep = (float)toColor.G - (float)fromColor.G;
             float blueStep = (float)toColor.B - (float)fromColor.B;
@@ -134,6 +134,7 @@ namespace cSoundz
                 await OpenMediaFile(file);
                 _player.Play();
             }
+            VolumeLbl.Text = volumeSlide.Value.ToString();
         }
 
         private async Task OpenMediaFile(StorageFile file)
@@ -208,8 +209,18 @@ namespace cSoundz
         TimeSpan _peakFallTime = TimeSpan.FromMilliseconds(3000);
         TimeSpan _frameDuration = TimeSpan.FromMilliseconds(16.7);
         CanvasTextFormat _spectrumTextFormat;
-        
         private void spectrum_Draw(object sender, AudioVisualizer.VisualizerDrawEventArgs args)
+        {
+            try
+            {
+                DrawSpectrum(sender, args);
+            }
+            catch
+            {
+
+            }
+        }
+        private void DrawSpectrum(object sender, AudioVisualizer.VisualizerDrawEventArgs args)
         {
             var drawingSession = (CanvasDrawingSession)args.DrawingSession;
             
@@ -344,6 +355,16 @@ namespace cSoundz
                 drawingSession.FillCircle(center, radius, Color.FromArgb(255, 255, 255, 255));
             }
             return compositor.CreateSurfaceBrush(surface);
+        }
+
+        private void volumeSlide_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            if (_player != null)
+            {
+                _player.Volume = volumeSlide.Value/100.0;
+                VolumeLbl.Text = volumeSlide.Value.ToString();
+            }
+            
         }
     }
 }
