@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="e3570a26-b3aa-49d4-b7e3-52210732aad6"
-    Publisher="CN=Nick"
+    Name="58100GmeApps.SeeSomeSounds"
+    Publisher="CN=C1D327D5-0D67-41D6-A942-CEFABBD8B983"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="e3570a26-b3aa-49d4-b7e3-52210732aad6" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="a34470d1-d5ed-4040-9811-edb7d2fedfd9" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>cSoundz</DisplayName>
-    <PublisherDisplayName>Nick</PublisherDisplayName>
+    <DisplayName>See Some Sounds</DisplayName>
+    <PublisherDisplayName>GmeApps</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -32,7 +32,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="cSoundz.App">
       <uap:VisualElements
-        DisplayName="cSoundz"
+        DisplayName="See Some Sounds"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="cSoundz"

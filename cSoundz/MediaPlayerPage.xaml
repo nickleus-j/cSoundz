@@ -81,12 +81,12 @@
                             Source="{StaticResource source}"
                             Width="75"
                             Height="40"
-                            Draw="PositionDisplay_Draw" />
+                            Draw="PositionDisplay_Draw" FontSize="14" FontFamily="Source Code Pro" />
                 <AppBarButton Click="PlayButton_Click" Icon="Play" FocusVisualSecondaryBrush="#9988CBB9"/>
                 <AppBarButton Click="StopButton_Click" Icon="Pause" FocusVisualSecondaryBrush="#999FA8DE" />
                 <AppBarButton Click="OpenFile_Click" Icon="OpenFile" FocusVisualSecondaryBrush="#99B0E652" />
                 <Slider ValueChanged="volumeSlide_ValueChanged" MinWidth="100" Value="100" x:Name="volumeSlide" Maximum="100" Minimum="0"/>
-                <TextBlock x:Name="VolumeLbl" Text="100"/>
+                <TextBlock x:Name="VolumeLbl" Text="100" Margin="10,5,0,0"/>
             </StackPanel>
         </Grid>
     </Grid>

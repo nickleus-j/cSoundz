@@ -322,7 +322,8 @@ namespace cSoundz
             }
             string timeString = position.ToString("mm\\:ss\\.ff");
             var ds = (CanvasDrawingSession)args.DrawingSession;
-            ds.DrawText(timeString, 0, 0, Colors.Gray);
+            CanvasTextFormat format = new CanvasTextFormat { FontSize = 16.0f, FontFamily= Microsoft.Graphics.Canvas.Text.CanvasTextFormat.GetSystemFontFamilies()[1]};
+            ds.DrawText(timeString, 0, 0, Colors.Gray, format);
         }
 
         public CompositionBrush CreateElementBrush(object sender, Color elementColor, Size size, Compositor compositor, CompositionGraphicsDevice device)
