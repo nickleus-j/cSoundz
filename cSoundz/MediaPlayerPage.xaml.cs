@@ -1,4 +1,5 @@
 ﻿using AudioVisualizer;
+using cSoundz.Model;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Text;
 using Microsoft.Graphics.Canvas.UI.Composition;
@@ -42,6 +43,7 @@ namespace cSoundz
         SourceConverter _source;
         SourceConverter _analogSource;
         SourceConverter _spectrumSource;
+        SourceConverter lsSource;
         Random rnd;
         Color barColor;
         public MediaPlayerPage()
@@ -51,6 +53,7 @@ namespace cSoundz
             _player = new MediaPlayer();
             _player.MediaOpened += Player_MediaOpened;
             _player.PlaybackSession.PositionChanged += Player_PositionChanged;
+            _player.MediaEnded += Player_Ended;
             _playbackSource = PlaybackSource.CreateFromMediaPlayer(_player);
             _playbackSource.SourceChanged += PlaybackSource_Changed;
             _source = (SourceConverter)Resources["source"];
@@ -70,12 +73,16 @@ namespace cSoundz
             _spectrumSource.MaxFrequency = 20000.0f;
             _spectrumSource.FrequencyScale = ScaleType.Logarithmic;
             _spectrumSource.AnalyzerTypes = AnalyzerType.Spectrum;
-
+            lsSource = (SourceConverter)Resources["lsSource"];
+            lsSource.RmsRiseTime = TimeSpan.FromMilliseconds(500);
+            lsSource.RmsFallTime = TimeSpan.FromMilliseconds(500);
+            lsSource.AnalyzerTypes = AnalyzerType.RMS;
             // Create bar steps with 1db steps from -86db to +6
             const int fromDb = -86;
             const int toDb = 6;
             MeterBarLevel[] levels = new MeterBarLevel[toDb - fromDb];
-            Color fromColor = Colors.LightGoldenrodYellow;
+            MeterBarLevel[] secondaryLevels = new MeterBarLevel[toDb - fromDb];
+            Color fromColor = Colors.Yellow;
             Color toColor = Colors.Crimson;
             float redStep = (float)toColor.R - (float)fromColor.R;
             float greenStep = (float)toColor.G - (float)fromColor.G;
@@ -86,9 +93,13 @@ namespace cSoundz
                 float ratio = (float)i / (float)levels.Count();
                 levels[i].Color = Color.FromArgb(255, (byte)((redStep * ratio) + fromColor.R), (byte)((greenStep * ratio) + fromColor.G), (byte)((blueStep * ratio) + fromColor.B));
                 levels[i].Level = i + fromDb;
+                secondaryLevels[i].Color = Color.FromArgb(255, (byte)((blueStep * ratio) + fromColor.B), Convert.ToByte(rnd.Next(256)), (byte)((redStep * ratio) + fromColor.R));
+                secondaryLevels[i].Level = i + fromDb;
             }
+            
             bar0.Levels = levels;
             bar1.Levels = levels;
+            bar2.Levels = secondaryLevels;
             barspectrum.ElementFactory = this;
             barspectrum.ElementShadowBlurRadius = 5;
             barspectrum.ElementShadowOffset = new Vector3(2, 2, -10);
@@ -104,6 +115,7 @@ namespace cSoundz
             _source.Source = _playbackSource.Source;
             _analogSource.Source = _playbackSource.Source;
             _spectrumSource.Source = _playbackSource.Source;
+            lsSource.Source = _playbackSource.Source;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -112,6 +124,7 @@ namespace cSoundz
             _source.Source = _playbackSource.Source;
             _analogSource.Source = _playbackSource.Source;
             _spectrumSource.Source = _playbackSource.Source;
+            lsSource.Source = _playbackSource.Source;
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -131,17 +144,22 @@ namespace cSoundz
             var file = await picker.PickSingleFileAsync();
             if (file != null)
             {
-                await OpenMediaFile(file);
-                _player.Play();
+                 OpenMediaFile(file);
+                
+                
             }
             VolumeLbl.Text = volumeSlide.Value.ToString();
+            
         }
 
-        private async Task OpenMediaFile(StorageFile file)
+        private void OpenMediaFile(StorageFile file)
         {
-            _player.Source = MediaSource.CreateFromStorageFile(file);
-            MusicProperties musicProps = await file.Properties.GetMusicPropertiesAsync();
-            nowPlaying.Text = $"Now playing {musicProps.Title} by {musicProps.Artist}";
+            int originalLength = playlistView.Items.Count;
+            playlistView.Items.Add(new MediaTrack(file));
+            if(playlistView.SelectedIndex<0|| originalLength < 1)
+            {
+                playlistView.SelectedIndex = 0;
+            }
         }
 
         bool _insidePositionUpdate = false;
@@ -168,10 +186,26 @@ namespace cSoundz
                     barColor = GetSolidColorBrush().Color;
                 });
         }
-
-
-
-
+        private async void Player_Ended(object sender, object e)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    if (playlistView.SelectedIndex < playlistView.Items.Count - 1)
+                    {
+                        playlistView.SelectedIndex += 1;
+                        seekSlider.Value = 0;
+                    }
+                });
+        }
+        private async void playlistView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            StorageFile file = ((MediaTrack)playlistView.Items.ElementAt(playlistView.SelectedIndex)).File;
+            _player.Source = MediaSource.CreateFromStorageFile(file);
+            MusicProperties musicProps = await file.Properties.GetMusicPropertiesAsync();
+            nowPlaying.Text = $"Now playing {musicProps.Title} by {musicProps.Artist}";
+            _player.Play();
+        }
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             _player.Play();
@@ -367,5 +401,7 @@ namespace cSoundz
             }
             
         }
+
+        
     }
 }
