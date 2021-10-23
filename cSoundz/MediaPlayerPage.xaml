@@ -15,7 +15,7 @@
         <a:SourceConverter x:Key="lsSource"></a:SourceConverter>
     </Page.Resources>
 
-    <Grid Background="#FFF0F1Ff">
+    <Grid Background="#FFEDE1FF">
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
@@ -24,7 +24,7 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="40"></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock  Grid.Row="2" x:Name="nowPlaying" Margin="20,0,0,0" FontSize="20" FontFamily="Noto Sans"></TextBlock>
+        <TextBlock  Grid.Row="2" x:Name="nowPlaying" Margin="20,0,0,0" FontSize="20" FontFamily="Noto Sans" FocusVisualPrimaryBrush="#FF666464"></TextBlock>
         <Pivot Grid.Row="0">
             <PivotItem Header="Analog" Background="GhostWhite">
                 <Grid>

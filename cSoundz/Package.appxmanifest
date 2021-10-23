@@ -9,7 +9,7 @@
   <Identity
     Name="58100GmeApps.SeeSomeSounds"
     Publisher="CN=C1D327D5-0D67-41D6-A942-CEFABBD8B983"
-    Version="1.0.0.0" />
+    Version="1.0.3.0" />
 
   <mp:PhoneIdentity PhoneProductId="a34470d1-d5ed-4040-9811-edb7d2fedfd9" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
